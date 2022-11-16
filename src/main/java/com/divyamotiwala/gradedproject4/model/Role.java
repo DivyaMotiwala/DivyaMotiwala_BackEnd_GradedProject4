@@ -5,10 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToMany;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,22 +16,24 @@ import lombok.ToString;
 @Entity
 @Setter
 @Getter
-@ToString(exclude = "user")
-@EqualsAndHashCode(of = "roleId")
+@ToString
+@EqualsAndHashCode
 public class Role {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "role_id")
 	private int roleId;
 
 	@Column(name = "role_name")
 	private String roleName;
 
-	@ManyToOne
-	@JoinColumn(name="user_id_fk")
-	//, nullable = false)
-   // @JsonManagedReference
-
-	private User user;
+	/*
+	 * @ManyToMany
+	 * 
+	 * @JoinColumns(joinColumn(name="user_id_fk") //, nullable = false)
+	 * // @JsonManagedReference
+	 * 
+	 * private User user;
+	 */
 }

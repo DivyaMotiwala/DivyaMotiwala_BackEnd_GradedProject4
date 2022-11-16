@@ -1,7 +1,6 @@
 package com.divyamotiwala.gradedproject4.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,10 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -33,16 +32,22 @@ import lombok.ToString;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 	
 	private String userName;
 	private String password;
 	private String emailAddress;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonBackReference
-
+	/*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+   // @JsonBackReference
+	private List<Role> roles;
+	*/
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@JoinTable(name="users_roles",
+				joinColumns = @JoinColumn(name="userId"),
+				inverseJoinColumns = @JoinColumn(name="roleId")
+			)
 	private List<Role> roles;
 	
 	public void addRole(Role role)
@@ -50,7 +55,7 @@ public class User {
 		if(this.roles == null)
 			this.roles = new ArrayList<>();
 		this.roles.add(role);
-		role.setUser(this);
+		//role.setUser(this);
 			
 	}
 }
